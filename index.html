@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+    <link rel="stylesheet" type="text/css" href="http://kenwheeler.github.io/slick/slick/slick.css">
+    <link rel="stylesheet" type="text/css" href="http://kenwheeler.github.io/slick/slick/slick-theme.css">
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font: 13px Helvetica, Arial; background-color: #697b90; }
+      form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%;}
+      form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+      form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+      #messages { list-style-type: none; margin: 0; padding: 0; overflow: auto; height: calc(100vh - 39px); border-left: 1px solid #000;width: 350px; position: fixed; right: 0; display: none;}
+      #messages li { padding: 5px 10px; }
+      #messages li:nth-child(odd) { background: #eee; }
+      #sliderContainer {
+        width: 100%;
+        padding-top: 20px;
+        border: 1px solid #000;
+        border-right: none;
+        position: fixed;
+      }
+      #sliderContainer img {
+        margin: auto;
+        height: 100%;
+      }
+      .slick-prev {left: 50px;}
+      .slick-next {right: 50px;}
+      .slick-prev, .slick-next, .slick-prev:hover, .slick-next:hover {background: red;z-index: 9999;}
+    </style>
+  </head>
+  <body>
+    <ul id="messages"></ul>
+    <div id="sliderContainer">
+      <div class="your-class">
+        <div>
+          <img src="http://img4.autodeclics.com/photos/10/273278/carre-porsche-911-turbo-s-exclusive-series-2017.jpg"> 
+        </div>
+        <div>
+          <img src="https://i.pinimg.com/736x/d0/a6/15/d0a61515d6aa41328bf016ede290af17--singer-porsche-.jpg"> 
+        </div>
+        <div>
+          <img src="https://di735fsgy6skn.cloudfront.net/media/image/e/x/exotics-racing-porsche-gts-5.jpg"> 
+        </div>
+      </div>
+      <p id="slideInfo"></p>
+    </div>
+      
+    <form action="">
+      <input id="m" autocomplete="off" /><button>Send</button>
+    </form>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script src="http://kenwheeler.github.io/slick/slick/slick.js"></script>
+    <script>
+      $(function () {
+        var socket = io();
+
+        $('form').submit(function(){
+          socket.emit('chat message', $('#m').val());
+          $('#m').val('');
+          return false;
+        });
+
+        socket.on('chat message', function(msg){
+          $('#messages').append($('<li>').text(msg));
+        });
+
+        var slider = $('.your-class');
+          slider.slick({
+            dots: true,
+            fade: true,
+            infinite: true,
+            speed: 500
+        });
+
+        // On swipe event
+        slider.on('beforeChange', function(event, slick, currentSlide, nextSlide){
+          $('#slideInfo').text(nextSlide);
+          socket.emit('slide change', nextSlide );
+        });
+
+        socket.on('slide change', function(slideNumber){
+          slider[0].slick.slickGoTo(slideNumber);
+        });
+
+      });
+    </script>
+  </body>
+</html>
