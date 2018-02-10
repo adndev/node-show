@@ -5,11 +5,11 @@
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.css">
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.css">
     <style>
-      * { margin: 0; padding: 0; box-sizing: border-box; }
-      body { font: 13px Helvetica, Arial; background-color: #697b90; }
+      * { margin: 0; padding: 0; box-sizing: border-box;letter-spacing: 1px; }
+      body { font: 13px Helvetica, Arial; background-color: #7891a0; }
       form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%;}
-      form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
-      form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+      input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+      button { width: 9%; background: rgb(166, 193, 202); border: none; padding: 10px; font-size: 12px; letter-spacing: 2px;}
       #messages { list-style-type: none; margin: 0; padding: 0; overflow: auto; height: calc(100vh - 39px); border-left: 1px solid #000;width: 20%; position: fixed; right: 0;}
       #messages li { padding: 5px 10px; }
       #messages li:nth-child(odd) { background: #eee; }
@@ -27,42 +27,87 @@
       .slick-prev {left: 50px;}
       .slick-next {right: 50px;}
       .slick-prev, .slick-next, .slick-prev:hover, .slick-next:hover {z-index: 9999;}
+      #login form { 
+        position: relative;
+        padding: 0;
+        background: transparent;
+      }
+      #login form button,
+      #login form input {
+        width: 100%;
+      }
+
+      #login form button {
+        margin-top: 10px;
+      }
+      #login {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #d2d0d0;
+        height: 100vh;
+      }
+      #app_container {display: none;}
+      body.logged #app_container {
+        display: block;
+      }
+      body.logged #login {display: none;}
     </style>
   </head>
   <body>
-    <ul id="messages"></ul>
-    <div id="sliderContainer">
-      <div class="your-class">
-        <div>
-          <img src="http://img4.autodeclics.com/photos/10/273278/carre-porsche-911-turbo-s-exclusive-series-2017.jpg"> 
-        </div>
-        <div>
-          <img src="https://i.pinimg.com/736x/d0/a6/15/d0a61515d6aa41328bf016ede290af17--singer-porsche-.jpg"> 
-        </div>
-        <div>
-          <img src="https://di735fsgy6skn.cloudfront.net/media/image/e/x/exotics-racing-porsche-gts-5.jpg"> 
-        </div>
+    <div id="login">
+      <div id="loginForm">
+        <form action="">
+          <input id="loginName" type="text" autocomplete="off" placeholder="Enter your name" />
+          <button id="loginSave">Enter</button>
+        </form>
       </div>
     </div>
-      
-    <form action="">
-      <input id="m" autocomplete="off" /><button>Send</button>
-    </form>
+    <div id="app_container">
+      <ul id="messages"></ul>
+      <div id="sliderContainer">
+        <div class="your-class">
+          <div>
+            <img src="http://img4.autodeclics.com/photos/10/273278/carre-porsche-911-turbo-s-exclusive-series-2017.jpg"> 
+          </div>
+          <div>
+            <img src="https://i.pinimg.com/736x/d0/a6/15/d0a61515d6aa41328bf016ede290af17--singer-porsche-.jpg"> 
+          </div>
+          <div>
+            <img src="https://di735fsgy6skn.cloudfront.net/media/image/e/x/exotics-racing-porsche-gts-5.jpg"> 
+          </div>
+        </div>
+      </div>
+        
+      <form id="chatForm" action="">
+        <input id="m" autocomplete="off" /><button>Send</button>
+      </form>
+    </div>
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.js"></script>
     <script>
       $(function () {
+        // store user in localstorage
+        var userNameSaved ;
+
+        $('#loginForm form').submit(function(e){
+            localStorage.setItem('usernameshow', $('#loginName').val());
+            userNameSaved = localStorage.getItem('usernameshow');
+            $('body').addClass('logged');
+            return false;
+        });
+
         var socket = io();
 
-        $('form').submit(function(){
+        $('#chatForm').submit(function(){
           socket.emit('chat message', $('#m').val());
           $('#m').val('');
           return false;
         });
 
         socket.on('chat message', function(msg){
-          $('#messages').append($('<li>').text(msg));
+          $('#messages').append($('<li>').text(userNameSaved +' : '+msg));
         });
 
         var slider = $('.your-class');
