@@ -20,6 +20,7 @@
         border-right: none;
         position: fixed;
       }
+      .full-screen-mode #sliderContainer {width: 100%;}
       #sliderContainer img {
         margin: auto;
         height: 100%;
@@ -52,6 +53,31 @@
         display: block;
       }
       body.logged #login {display: none;}
+      html:-moz-full-screen {
+          background: #000;
+      }
+
+      html:-webkit-full-screen {
+          background: #000;
+      }
+
+      html:-ms-fullscreen {
+          background: #000;
+          width: 100%; /* needed to center contents in IE */
+      }
+
+      html:fullscreen {
+          background: red;
+      }
+      #full-mode {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+      }
+      .full-screen-mode #messages,
+      .full-screen-mode #chatForm {
+        display: none;
+      }
     </style>
   </head>
   <body>
@@ -77,6 +103,7 @@
             <img src="https://di735fsgy6skn.cloudfront.net/media/image/e/x/exotics-racing-porsche-gts-5.jpg"> 
           </div>
         </div>
+        <button id="full-mode">FULL</button>
       </div>
         
       <form id="chatForm" action="">
@@ -90,6 +117,7 @@
       $(function () {
         // store user in localstorage
         var userNameSaved ;
+        var socket = io();
 
         $('#loginForm form').submit(function(e){
             localStorage.setItem('usernameshow', $('#loginName').val());
@@ -99,16 +127,39 @@
             return false;
         });
 
-        var socket = io();
+        var requestFullScreen = function () {
+          var docElm = document.documentElement;
+          if (docElm.requestFullscreen) {
+              docElm.requestFullscreen();
+          }
+          else if (docElm.mozRequestFullScreen) {
+              docElm.mozRequestFullScreen();
+          }
+          else if (docElm.webkitRequestFullScreen) {
+              docElm.webkitRequestFullScreen();
+          }
+          else if (docElm.msRequestFullscreen) {
+              docElm.msRequestFullscreen();
+          }
+        };
+
+        document.addEventListener("webkitfullscreenchange", function () {
+            (document.webkitIsFullScreen)? $('body').addClass('full-screen-mode') : $('body').removeClass('full-screen-mode');
+        }, false);
+
+        $('#full-mode').on('click', function(e){
+          requestFullScreen();
+        });
 
         $('#chatForm').submit(function(){
-          socket.emit('chat message', $('#m').val());
+          var msgToSend = userNameSaved +' : '+ $('#m').val();
+          socket.emit('chat message', msgToSend);
           $('#m').val('');
           return false;
         });
 
         socket.on('chat message', function(msg){
-          $('#messages').append($('<li>').text(userNameSaved +' : '+msg));
+          $('#messages').append($('<li>').text(msg));
         });
 
         var slider = $('.show-slider');
