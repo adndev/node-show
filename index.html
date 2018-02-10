@@ -43,7 +43,6 @@
           <img src="https://di735fsgy6skn.cloudfront.net/media/image/e/x/exotics-racing-porsche-gts-5.jpg"> 
         </div>
       </div>
-      <p id="slideInfo"></p>
     </div>
       
     <form action="">
@@ -76,7 +75,6 @@
 
         // On swipe event
         slider.on('beforeChange', function(event, slick, currentSlide, nextSlide){
-          $('#slideInfo').text(nextSlide);
           socket.emit('slide change', nextSlide );
         });
 
