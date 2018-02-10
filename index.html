@@ -4,6 +4,7 @@
     <title>Socket.IO chat</title>
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.css">
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.css">
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box;letter-spacing: 1px; }
       body { font: 13px Helvetica, Arial; background-color: #000; }
@@ -23,7 +24,7 @@
       .full-screen-mode #sliderContainer {width: 100%;}
       #sliderContainer img {
         margin: auto;
-        height: 100%;
+        width: 100%;
       }
       .slick-prev {left: 50px;}
       .slick-next {right: 50px;}
@@ -78,6 +79,8 @@
       .full-screen-mode #chatForm {
         display: none;
       }
+      .options-btn {color: #fff; opacity: 0.5; background: transparent; width: 48px; cursor: pointer;}
+      .options-btn:hover {opacity: 1;}
     </style>
   </head>
   <body>
@@ -94,16 +97,16 @@
       <div id="sliderContainer">
         <div class="show-slider">
           <div>
-            <img src="http://img4.autodeclics.com/photos/10/273278/carre-porsche-911-turbo-s-exclusive-series-2017.jpg"> 
+            <img src="https://icdn-2.motor1.com/images/mgl/211qx/s1/singer-dls-lightweight-porsche-911-restoration.jpg"> 
           </div>
           <div>
-            <img src="https://i.pinimg.com/736x/d0/a6/15/d0a61515d6aa41328bf016ede290af17--singer-porsche-.jpg"> 
+            <img src="https://icdn-8.motor1.com/images/mgl/Y4JEe/s1/used-porsche-911-r-for-sale.jpg"> 
           </div>
           <div>
-            <img src="https://di735fsgy6skn.cloudfront.net/media/image/e/x/exotics-racing-porsche-gts-5.jpg"> 
+            <img src="http://www.flat6-assurances.com/IMG/jpg/fond-ecran-porsche-22.jpg"> 
           </div>
         </div>
-        <button id="full-mode">FULL</button>
+        <button id="full-mode" class="fa fa-desktop fa-2x options-btn">&nbsp;</button>
       </div>
         
       <form id="chatForm" action="">
