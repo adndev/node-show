@@ -66,7 +66,7 @@
     <div id="app_container">
       <ul id="messages"></ul>
       <div id="sliderContainer">
-        <div class="your-class">
+        <div class="show-slider">
           <div>
             <img src="http://img4.autodeclics.com/photos/10/273278/carre-porsche-911-turbo-s-exclusive-series-2017.jpg"> 
           </div>
@@ -95,6 +95,7 @@
             localStorage.setItem('usernameshow', $('#loginName').val());
             userNameSaved = localStorage.getItem('usernameshow');
             $('body').addClass('logged');
+            $('.show-slider').slick('setPosition');
             return false;
         });
 
@@ -110,7 +111,7 @@
           $('#messages').append($('<li>').text(userNameSaved +' : '+msg));
         });
 
-        var slider = $('.your-class');
+        var slider = $('.show-slider');
           slider.slick({
             dots: true,
             fade: true,
