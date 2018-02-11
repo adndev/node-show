@@ -216,13 +216,10 @@
 
             var imgScr = '<div><img src="/output/'+parentFolder+'/'+imgTab[0]+'"/></div>';
 
-            $('#uploadEnd').append(imgScr);
             var slideCont = $('.show-slider');
             $.each(imgTab, function(index, value) {
               slideIndex++;
               slider.slick('slickAdd','<div><img src="/output/'+parentFolder+'/'+imgTab[index]+'"/></div>');
-
-                //slideCont.append()
             }); 
             //$('.show-slider').slick('setPosition');
         });
