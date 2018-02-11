@@ -12,14 +12,14 @@
       input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
       button { width: 9%; background: rgb(166, 193, 202); border: none; padding: 10px; font-size: 12px; letter-spacing: 2px;}
       #messages { list-style-type: none; margin: 0; padding: 0; overflow: auto; height: calc(100vh - 39px); border-left: 1px solid #000;width: 20%; position: fixed; right: 0; background: #fff;}
-      #messages li { padding: 5px 10px; }
-      #messages li:nth-child(odd) { background: #eee; }
+      li { padding: 5px 10px; }
+      li:nth-child(odd) { background: #eee; }
       #sliderContainer {
         width: 80%;
         padding-top: 20px;
         border: 1px solid #000;
         border-right: none;
-        position: fixed;
+        /*position: fixed;*/
       }
       .full-screen-mode #sliderContainer {width: 100%;}
       #sliderContainer img {
@@ -49,11 +49,11 @@
         background: #d2d0d0;
         height: 100vh;
       }
-      #app_container {display: none;}
+      
       body.logged #app_container {
         display: block;
       }
-      body.logged #login {display: none;}
+     
       html:-moz-full-screen {
           background: #000;
       }
@@ -86,10 +86,17 @@
   <body>
     <div id="login">
       <div id="loginForm">
-        <form action="">
+        <!-- <form action="">
           <input id="loginName" type="text" autocomplete="off" placeholder="Enter your name" />
           <button id="loginSave">Enter</button>
+        </form> -->
+        <form id="uplaodFrom" method="post" enctype="multipart/form-data" action="/">
+          <input type="text" name="title" placeholder="title"/>
+          <input type="file" name="upl"/>
+          <input type="submit"/>
         </form>
+        <p id="uploadEnd"><p>
+        <ul id="liste-pres"></ul>
       </div>
     </div>
     <div id="app_container">
@@ -122,13 +129,13 @@
         var userNameSaved ;
         var socket = io();
 
-        $('#loginForm form').submit(function(e){
+        /*$('#loginForm form').submit(function(e){
             localStorage.setItem('usernameshow', $('#loginName').val());
             userNameSaved = localStorage.getItem('usernameshow');
             $('body').addClass('logged');
             $('.show-slider').slick('setPosition');
             return false;
-        });
+        });*/
 
         var requestFullScreen = function () {
           var docElm = document.documentElement;
@@ -180,6 +187,19 @@
           $('#messages').append($('<li>').text(msg));
         });
 
+        socket.on('end upload', function(){
+          $('#uploadEnd').text('End upload SUCESS');
+        });
+
+        socket.on('folder names', function(foldersArray){
+          $.each(foldersArray, function(index, value) {
+              console.log(value.files);
+              var presLink = value.folder,
+                  presImg = value.files;
+              $('#liste-pres').append('<li data-images="'+presImg+'" data-foldername="'+presLink+'">'+presLink+'</li>');
+          }); 
+        });
+
         var slider = $('.show-slider');
           slider.slick({
             dots: true,
@@ -187,6 +207,26 @@
             infinite: true,
             speed: 500
         });
+          var slideIndex = 0;
+
+        $('#liste-pres').on('click', function(event){
+        var liElement = event.target,
+            imgTab = $(liElement).data('images').split(','),
+            parentFolder = $(liElement).data('foldername');
+
+            var imgScr = '<div><img src="/output/'+parentFolder+'/'+imgTab[0]+'"/></div>';
+
+            $('#uploadEnd').append(imgScr);
+            var slideCont = $('.show-slider');
+            $.each(imgTab, function(index, value) {
+              slideIndex++;
+              slider.slick('slickAdd','<div><img src="/output/'+parentFolder+'/'+imgTab[index]+'"/></div>');
+
+                //slideCont.append()
+            }); 
+            //$('.show-slider').slick('setPosition');
+        });
+
 
         // On swipe event
         slider.on('beforeChange', function(event, slick, currentSlide, nextSlide){
