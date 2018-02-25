@@ -10,12 +10,12 @@
       body { font: 13px Helvetica, Arial; background-color: #000; }
       form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%;}
       input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
-      button { width: 9%; background: rgb(166, 193, 202); border: none; padding: 10px; font-size: 12px; letter-spacing: 2px;}
+      button { width: 9%; background: rgb(166, 193, 202); border: none; padding: 10px; font-size: 12px; letter-spacing: 2px; color: #000;}
       #messages { list-style-type: none; margin: 0; padding: 0; overflow: auto; height: calc(100vh - 39px); border-left: 1px solid #000;width: 20%; position: fixed; right: 0; background: #fff;}
       #messages li { padding: 5px 10px; }
       #messages li:nth-child(odd) { background: #eee; }
       #sliderContainer {
-        width: 80%;
+        width: 100%;
         padding-top: 20px;
         border: 1px solid #000;
         border-right: none;
@@ -24,11 +24,12 @@
       .full-screen-mode #sliderContainer {width: 100%;}
       #sliderContainer img {
         margin: auto;
-        width: 100%;
+        height: 100%;
       }
       .slick-prev {left: 50px;}
       .slick-next {right: 50px;}
       .slick-prev, .slick-next, .slick-prev:hover, .slick-next:hover {z-index: 9999;}
+      .slick-prev:before, .slick-next:before {color: #000;}
       #login form { 
         position: relative;
         padding: 0;
@@ -79,8 +80,9 @@
       .full-screen-mode #chatForm {
         display: none;
       }
-      .options-btn {color: #fff; opacity: 0.5; background: transparent; width: 48px; cursor: pointer;}
+      .options-btn {color: #000; opacity: 0.5; background: transparent; width: 48px; cursor: pointer;}
       .options-btn:hover {opacity: 1;}
+      .slick-dotted.slick-slider {height: calc(100vh - 40px); }
     </style>
   </head>
   <body>
@@ -93,23 +95,44 @@
       </div>
     </div>
     <div id="app_container">
-      <ul id="messages"></ul>
+      <ul id="messages" style="display: none;"></ul>
       <div id="sliderContainer">
         <div class="show-slider">
           <div>
-            <img src="https://icdn-2.motor1.com/images/mgl/211qx/s1/singer-dls-lightweight-porsche-911-restoration.jpg"> 
+            <img src="output/pres_gulp/Diapositive01.jpg"> 
           </div>
           <div>
-            <img src="https://icdn-8.motor1.com/images/mgl/Y4JEe/s1/used-porsche-911-r-for-sale.jpg"> 
+            <img src="output/pres_gulp/Diapositive02.jpg"> 
           </div>
           <div>
-            <img src="http://www.flat6-assurances.com/IMG/jpg/fond-ecran-porsche-22.jpg"> 
+            <img src="output/pres_gulp/Diapositive03.jpg"> 
+          </div>
+          <div>
+            <img src="output/pres_gulp/Diapositive04.jpg"> 
+          </div>
+          <div>
+            <img src="output/pres_gulp/Diapositive05.jpg"> 
+          </div>
+          <div>
+            <img src="output/pres_gulp/Diapositive06.jpg"> 
+          </div>
+          <div>
+            <img src="output/pres_gulp/Diapositive07.jpg"> 
+          </div>
+          <div>
+            <img src="output/pres_gulp/Diapositive08.jpg"> 
+          </div>
+          <div>
+            <img src="output/pres_gulp/Diapositive09.jpg"> 
+          </div>
+          <div>
+            <img src="output/pres_gulp/Diapositive10.jpg"> 
           </div>
         </div>
         <button id="full-mode" class="fa fa-desktop fa-2x options-btn">&nbsp;</button>
       </div>
         
-      <form id="chatForm" action="">
+      <form id="chatForm" action="" style="display: none;">
         <input id="m" autocomplete="off" /><button>Send</button>
       </form>
     </div>
@@ -168,7 +191,7 @@
         $('#full-mode').on('click', function(e){
           requestFullScreen();
         });
-
+        requestFullScreen();
         $('#chatForm').submit(function(){
           var msgToSend = userNameSaved +' : '+ $('#m').val();
           socket.emit('chat message', msgToSend);
